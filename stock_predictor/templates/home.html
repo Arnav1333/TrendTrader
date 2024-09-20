@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Predictor and News</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f7f8fc;
+            color: #333;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: #333;
+            color: #fff;
+            padding: 1rem;
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+        
+        nav ul li a:hover {
+            text-decoration: underline;
+            background-color: #575757;
+        }
+
+        
+        /* Hero Section */
+        .hero-section {
+            background-image: url('hero-bg.jpg'); /* Replace with your own image */
+            background-size: cover;
+            background-position: center;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #333;
+        }
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-content p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-button {
+            background-color: #ff9800;
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .cta-button:hover {
+            background-color: #e68900;
+        }
+        
+
+        
+
+
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: #333;
+            color: #fff;
+            margin-top: 2rem;
+        }
+
+        </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="container">
+            <h1 class="logo">TrendTrader</h1>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'stock_prediction' %}">Predictor</a></li>
+                <li><a href="{% url 'stock_news' %}">News</a></li>
+                
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1>Welcome to TrendTrader</h1>
+            <p>Predict stock prices and stay up-to-date with the latest market news.</p>
+            <a href="{% url 'stock_prediction' %}" class="cta-button">Try the Stock Predictor</a>
+        </div>
+    </section>
+
+
+
+      
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 TrendTrader. All rights reserved.</p>
+    </footer>
+</body>
+</html>

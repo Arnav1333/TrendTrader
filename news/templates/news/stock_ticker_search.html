@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Stock News</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #333;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        input {
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        button {
+            font-size: 1rem;
+            position: relative;
+            top:19px;
+            padding: 10px ;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            height: 40px;
+            
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        .news-list {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        .news-list a {
+            font-size: 1.2rem;
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        li a:hover {
+            text-decoration: underline;
+        }
+        li p {
+            margin-top: 0.5rem;
+            color: #555;
+        }
+        nav {
+            background-color: #333;
+            color: white;
+            padding: 0px 10px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+        nav .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            color: #fff;
+            font-size: 1.5rem;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+        }
+        nav ul li a:hover {
+            background-color: #575757;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <h1 class="logo">TrendTrader</h1>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'stock_prediction' %}">Predictor</a></li>
+                <li><a href="{% url 'stock_news' %}">News</a></li>
+               
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1>Search for Stock News</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Get News</button>
+        </form>
+
+        <!-- Only display the news if we have any articles -->
+        {% if news_articles %}
+            <h2>News for {{ stock_ticker }}</h2>
+            <ul>
+                {% for article in news_articles %}
+                    <li class='news-list'>
+                        <a href="{{ article.url }}" target="_blank">{{ article.title }}</a>
+                        <p>{{ article.summary }}</p>
+                        <p>{{ article.description }}</p>
+                        <p><strong>Source:</strong> {{ article.source }}</p>
+                        <p><strong>Published at:</strong> {{ article.published_at }}</p>
+                        <p><strong>Sentiment Polarity:</strong> {{ article.sentiment_polarity }}</p>
+                        <p><strong>Sentiment Subjectivity:</strong> {{ article.sentiment_subjectivity }}</p>
+                    </li>
+                {% empty %}
+                    <li>No news articles available for this stock.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
