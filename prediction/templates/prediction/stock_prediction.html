@@ -51,24 +51,25 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 90%;
             margin: 20px auto;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Center content inside container */
         }
 
         h1 {
             font-size: 32px;
             color: #2c3e50;
-            text-align: center;
         }
 
         form {
             display: flex;
             flex-direction: column;
             gap: 10px;
+            align-items: center; /* Center form items */
         }
 
         form button {
@@ -79,6 +80,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            width: 200px;         
         }
 
         form button:hover {
@@ -87,6 +89,7 @@
 
         .accuracy {
             margin-top: 20px;
+            text-align: left; /* Left-align accuracy section */
         }
 
         .accuracy p {
@@ -146,10 +149,14 @@
         {% if graph %}
             <h2>Prediction for {{ stock_ticker }}</h2>
             <div>{{ graph|safe }}</div>
-
             <div class="accuracy">
+                <!-- <p>Historic Drift: {{ historic_drift }}%</p>
+                <p>Predicted Drift: {{ predicted_drift }}%</p>
+               -->
                 <p>Historical Volatility: {{ historical_volatility }}%</p>
                 <p>Simulated Volatility: {{ simulated_volatility }}%</p>
+            </div>
+            
             </div>
         {% endif %}
     </div>
