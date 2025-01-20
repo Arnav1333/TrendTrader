@@ -4,6 +4,9 @@ import pandas as pd
 import yfinance as yf
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error, r2_score
 import plotly.graph_objs as go
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 from .forms import StockPredictionForm
 
 # Function to calculate daily returns
@@ -11,16 +14,41 @@ def calculate_daily_returns(data):
     daily_returns = data['Close'].pct_change().dropna()
     return daily_returns
 
-# Function for Geometric Brownian Motion (GBM) for price prediction
+# Function for Geometric Brownian Motion (GBM)
 def geometric_brownian_motion(S0, mu, sigma, T, dt, N):
     t = np.linspace(0, T, N)
     W = np.random.standard_normal(size=N)
-    W = np.cumsum(W) * np.sqrt(dt)  # Cumulative sum for Brownian motion
+    W = np.cumsum(W) * np.sqrt(dt)
     X = (mu - 0.5 * sigma**2) * t + sigma * W
-    S = S0 * np.exp(X)  # GBM formula
+    S = S0 * np.exp(X)
     return S
 
-# Stock Prediction View
+# LSTM Model Functions
+def preprocess_data(data, feature='Close', window_size=60):
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    scaled_data = scaler.fit_transform(data[feature].values.reshape(-1, 1))
+    
+    X, y = [], []
+    for i in range(window_size, len(scaled_data)):
+        X.append(scaled_data[i - window_size:i, 0])
+        y.append(scaled_data[i, 0])
+    
+    X, y = np.array(X), np.array(y)
+    X = np.reshape(X, (X.shape[0], X.shape[1], 1))
+    
+    return X, y, scaler
+
+def build_lstm_model(input_shape):
+    model = Sequential()
+    model.add(LSTM(units=50, return_sequences=True, input_shape=input_shape))
+    model.add(Dropout(0.1))
+    model.add(LSTM(units=50, return_sequences=False))
+    model.add(Dense(units=25))
+    model.add(Dense(units=1))
+    
+    model.compile(optimizer='adam', loss='mean_squared_error')
+    return model
+
 # Stock Prediction View
 def stock_prediction_view(request):
     form = StockPredictionForm()
@@ -33,109 +61,100 @@ def stock_prediction_view(request):
             time_horizon = form.cleaned_data['time_horizon']
 
             try:
-                # Fetch stock data from Yahoo Finance
-                data = yf.download(stock_ticker, start='2022-01-01', end='2024-10-14')
+                # Fetch stock data
+                data = yf.download(stock_ticker, start='2022-01-01', end='2024-12-14')
                 price_column = 'Adj Close' if 'Adj Close' in data.columns else 'Close'
+                
+                # Prepare data for LSTM
+                X, y, scaler = preprocess_data(data, feature=price_column, window_size=60)
+                
+                # Split data for LSTM
+                split = int(len(X) * 0.8)
+                X_train, X_test = X[:split], X[split:]
+                y_train, y_test = y[:split], y[split:]
+                
+                # Build and train LSTM model
+                model = build_lstm_model(input_shape=(X_train.shape[1], 1))
+                model.fit(X_train, y_train, epochs=20, batch_size=32, validation_data=(X_test, y_test), verbose=0)
+                
+                # GBM Parameters
                 daily_returns = calculate_daily_returns(data)
-
-                # Parameters for GBM
-                mu = daily_returns.mean() * 252  # Annualized mean return
-                sigma = daily_returns.std() * np.sqrt(252)  # Annualized volatility
-                S0 = data[price_column].iloc[-1]  # Last closing price
-                T = time_horizon / 12  # Time horizon in years
-                dt = 1 / 252  # Daily steps
-                N = int(T / dt)  # Number of steps
-
-                # Predict future stock prices using GBM
-                predicted_prices = geometric_brownian_motion(S0, mu, sigma, T, dt, N)
-
+                mu = daily_returns.mean() * 252
+                sigma = daily_returns.std() * np.sqrt(252)
+                S0 = data[price_column].iloc[-1]
+                T = time_horizon / 12
+                dt = 1 / 252
+                N = int(T / dt)
+                
+                # Generate predictions
+                gbm_predictions = geometric_brownian_motion(S0, mu, sigma, T, dt, N)
+                
+                # Generate LSTM predictions
+                last_sequence = X[-1].reshape(1, X.shape[1], 1)
+                lstm_predictions = []
+                
+                for _ in range(N):
+                    next_pred = model.predict(last_sequence, verbose=0)
+                    lstm_predictions.append(next_pred[0, 0])
+                    last_sequence = np.roll(last_sequence[0], -1)
+                    last_sequence[-1] = next_pred
+                    last_sequence = last_sequence.reshape(1, X.shape[1], 1)
+                
+                # Inverse transform LSTM predictions
+                lstm_predictions = scaler.inverse_transform(np.array(lstm_predictions).reshape(-1, 1))
+                
+                # Blend predictions (90% LSTM, 10% GBM)
+                blended_predictions = 0.9 * lstm_predictions.flatten() + 0.1 * gbm_predictions
+                
                 # Create future date index
                 last_date = data.index[-1]
                 future_dates = pd.date_range(last_date, periods=N, freq='B')
-
-                # Create DataFrame for predicted data
-                predicted_data = pd.DataFrame(predicted_prices, index=future_dates, columns=['Predicted'])
-                real_and_predicted = pd.concat([data[[price_column]], predicted_data])
-
-                # Calculate MSE, MAPE, and R2
-                overlap_period = min(len(data), len(predicted_data))
-                mse = mean_squared_error(data[price_column][-overlap_period:], predicted_data['Predicted'][:overlap_period])
-                mape = mean_absolute_percentage_error(data[price_column][-overlap_period:], predicted_data['Predicted'][:overlap_period])
-                r2 = r2_score(data[price_column][-overlap_period:], predicted_data['Predicted'][:overlap_period])
-
-                # Historical and simulated volatility
-                historical_volatility = daily_returns.std() * np.sqrt(252)  # Annualized historical volatility
-                predicted_returns = predicted_data['Predicted'].pct_change().dropna()  # Predicted returns
-                simulated_volatility = predicted_returns.std() * np.sqrt(252)  # Annualized simulated volatility
-
-                # Calculate price drift
-                drift = predicted_data['Predicted'][:overlap_period] - data[price_column][-overlap_period:]
-
-                # Create the drift figure
-                drift_trace = go.Scatter(
-                    x=predicted_data.index[:overlap_period],
-                    y=drift,
-                    mode='lines+markers',
-                    name='Price Drift',
-                    line=dict(color='red'),
-                )
                 
-                drift_fig = go.Figure(data=[drift_trace], layout=go.Layout(
-                    title='Predicted Price Drift (Predicted - Actual)',
-                    xaxis=dict(title='Date', color='white'),
-                    yaxis=dict(title='Drift', color='white'),
-                    paper_bgcolor='rgba(30, 30, 30, 1)',  # Dark background for the entire paper
-                    plot_bgcolor='rgba(30, 30, 30, 1)',   # Dark background for the plot area
-                    font=dict(color='white')                # Set font color for axes and title
-                ))
-
-                # HTML for the drift graph
-                drift_graph_div = drift_fig.to_html(full_html=False)
-
-                # Plot real vs predicted prices
-                real_trace = go.Scatter(x=real_and_predicted.index, y=real_and_predicted[price_column],
-                                        mode='lines', name='Real Prices', line=dict(color='blue'))
-                predicted_trace = go.Scatter(x=predicted_data.index, y=predicted_data['Predicted'],
-                                             mode='lines', name='Predicted Prices (GBM)', line=dict(color='orange'))
-
-                # Define your layout with updated x-axis for July and January
+                # Create DataFrames
+                predicted_data = pd.DataFrame({
+                    'GBM': gbm_predictions,
+                    'LSTM': lstm_predictions.flatten(),
+                    'Blended': blended_predictions
+                }, index=future_dates)
+                
+                # Calculate metrics
+                historical_data = data[price_column][-N:]
+                mse = mean_squared_error(historical_data, predicted_data['Blended'][:len(historical_data)])
+                mape = mean_absolute_percentage_error(historical_data, predicted_data['Blended'][:len(historical_data)])
+                r2 = r2_score(historical_data, predicted_data['Blended'][:len(historical_data)])
+                
+                # Create plots
+                traces = [
+                    go.Scatter(x=data.index, y=data[price_column], mode='lines', name='Historical', line=dict(color='blue')),
+                    go.Scatter(x=future_dates, y=predicted_data['GBM'], mode='lines', name='GBM', line=dict(color='green')),
+                    go.Scatter(x=future_dates, y=predicted_data['LSTM'], mode='lines', name='LSTM', line=dict(color='red')),
+                    go.Scatter(x=future_dates, y=predicted_data['Blended'], mode='lines', name='Blended Forecast', line=dict(color='purple'))
+                ]
+                
                 layout = go.Layout(
                     title=f'{stock_ticker} Stock Price Prediction',
-                    xaxis=dict(
-                        title='Date',
-                        color='white',
-                        tickvals=[
-                            pd.Timestamp(year, month, day) 
-                            for year in range(real_and_predicted.index.year.min(), future_dates.year.max() + 1)
-                            for month, day in [(1, 1), (7, 1)]  # January 1 and July 1
-                        ],
-                        ticktext=[f'{month} {year}' 
-                                  for year in range(real_and_predicted.index.year.min(), future_dates.year.max() + 1) 
-                                  for month in ['January', 'July']],
-                        range=[real_and_predicted.index.min(), future_dates[-1] + pd.DateOffset(months=3)],  # Extend range 3 months beyond prediction
-                    ),
-                    yaxis=dict(title='Price', color='white'),  # Set y-axis title color
-                    legend=dict(x=0, y=1, font=dict(color='white')),  # Set legend font color
-                    paper_bgcolor='rgba(30, 30, 30, 1)',  # Dark background for the entire paper
-                    plot_bgcolor='rgba(30, 30, 30, 1)',   # Dark background for the plot area
-                    font=dict(color='white')                # Set font color for axes and title
+                    xaxis=dict(title='Date', color='white'),
+                    yaxis=dict(title='Price', color='white'),
+                    legend=dict(font=dict(color='white')),
+                    paper_bgcolor='rgba(30, 30, 30, 1)',
+                    plot_bgcolor='rgba(30, 30, 30, 1)',
+                    font=dict(color='white')
                 )
-
-                # Create the figure with updated layout
-                fig = go.Figure(data=[real_trace, predicted_trace], layout=layout)
-
-                # HTML for the graph
+                
+                fig = go.Figure(data=traces, layout=layout)
                 graph_div = fig.to_html(full_html=False)
-
-                # Add variables to context
-                context['graph'] = graph_div
-                context['drift_graph'] = drift_graph_div  # Add the drift graph to context
-                context['stock_ticker'] = stock_ticker
-                context['mse'] = mse
-                context['mape'] = mape * 100  # Convert to percentage
-                context['r2'] = r2
-                context['historical_volatility'] = historical_volatility * 100  # Convert to percentage
-                context['simulated_volatility'] = simulated_volatility * 100  # Convert to percentage
+                
+              
+                context.update({
+                    'graph': graph_div,
+                    'stock_ticker': stock_ticker,
+                    'mse': mse,
+                    'mape': mape * 100,
+                    'r2': r2,
+                    'lstm_forecast': lstm_predictions[-1][0],
+                    'gbm_forecast': gbm_predictions[-1],
+                    'blended_forecast': blended_predictions[-1]
+                })
 
             except Exception as e:
                 context['error'] = str(e)
