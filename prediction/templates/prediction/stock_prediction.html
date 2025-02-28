@@ -57,7 +57,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center; /* Center content inside container */
+            text-align: center;
         }
 
         h1 {
@@ -69,7 +69,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            align-items: center; /* Center form items */
+            align-items: center;
         }
 
         form button {
@@ -80,7 +80,7 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            width: 200px;         
+            width: 200px;
         }
 
         form button:hover {
@@ -89,12 +89,20 @@
 
         .accuracy {
             margin-top: 20px;
-            text-align: left; /* Left-align accuracy section */
+            text-align: left;
         }
 
         .accuracy p {
             font-size: 16px;
             color: #2c3e50;
+        }
+        .graph-container {
+            width: 70%; /* Adjust the width as needed */
+            margin: 20px auto; /* Center the graph */
+        }
+        .graph-container img {
+            width: 100%; /* Make the image responsive within the container */
+            height: auto;
         }
 
         @media (max-width: 600px) {
@@ -142,20 +150,31 @@
         <h1>Stock Price Prediction</h1>
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            <label for="ticker">Ticker:</label>
+            <input type="text" name="ticker" id="ticker" ><br><br>
+
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" id="start_date" value="2015-01-01"><br><br>
+
+            <label for="end_date">End Date:</label>
+            <input type="date" name="end_date" id="end_date" value="2025-01-01"><br><br>
+
             <button type="submit">Predict</button>
         </form>
 
-        {% if graph %}
+        {% if graphic %}
             <h2>Prediction for {{ stock_ticker }}</h2>
-            <div>{{ graph|safe }}</div>
-            <div class="accuracy">
-                <!-- <p>Historic Drift: {{ historic_drift }}%</p>
-                <p>Predicted Drift: {{ predicted_drift }}%</p>
-               -->
-            
+            <div class="graph-container">
+                <img src="data:image/png;base64,{{ graphic }}">
             </div>
-            
+            <div class="accuracy">
+                <p>LSTM Prediction: {{ lstm_prediction }}</p>
+                <p>GBM Prediction: {{ gbm_prediction }}</p>
+                <p>Blended Prediction: {{ blended_prediction }}</p>
+                <p>MSE LSTM: {{ mse_lstm }}</p>
+                <p>MSE GBM: {{ mse_gbm }}</p>
+                <p>MSE Blended: {{ mse_blended }}</p>
             </div>
         {% endif %}
     </div>
