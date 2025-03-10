@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.graph_objects as go  # Import Plotly
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
@@ -9,6 +9,7 @@ import yfinance as yf
 import io
 import base64
 from django.shortcuts import render
+import plotly.io as pio # import plotly io
 
 def load_stock_data(ticker, start_date, end_date):
     data = yf.download(ticker, start=start_date, end=end_date)
@@ -53,7 +54,7 @@ def stock_prediction_view(request):
     if request.method == 'POST':
         ticker = request.POST.get('ticker', 'MSFT')
         start_date = request.POST.get('start_date', '2015-01-01')
-        end_date = request.POST.get('end_date', '2025-01-01')
+        end_date = request.POST.get('end_date', '2025-12-12')
 
         data = load_stock_data(ticker, start_date, end_date)
         X, y, scaler = preprocess_data(data, feature='Close', window_size=60)
@@ -90,29 +91,20 @@ def stock_prediction_view(request):
             error_message = "Length mismatch detected!"
             return render(request, 'stock_prediction.html', {'error_message': error_message})
         else:
-            plt.figure(figsize=(18, 7))
-            plt.plot(actual_dates, y_test_actual, color='blue', label='Actual Prices')
-            plt.plot(actual_dates, predictions, color='red', label='LSTM Predictions')
-            plt.plot(actual_dates, blended_predictions, color='green', label='Blended Predictions')
-            plt.title(f'{ticker} Stock Price Prediction')
-            plt.xlabel('Date')
-            plt.ylabel('Stock Price')
-            plt.legend()
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(x=actual_dates, y=y_test_actual.flatten(), mode='lines', name='Actual Prices'))
+            fig.add_trace(go.Scatter(x=actual_dates, y=predictions.flatten(), mode='lines', name='LSTM Predictions'))
+            fig.add_trace(go.Scatter(x=actual_dates, y=blended_predictions, mode='lines', name='Blended Predictions'))
+            fig.update_layout(title=f'{ticker} Stock Price Prediction', xaxis_title='Date', yaxis_title='Stock Price')
 
-            buffer = io.BytesIO()
-            plt.savefig(buffer, format='png')
-            buffer.seek(0)
-            image_png = buffer.getvalue()
-            buffer.close()
-
-            graphic = base64.b64encode(image_png).decode('utf-8')
+            plot_div = pio.to_html(fig, full_html=False) # Convert to html div.
 
             lstm_prediction = predictions[-1][0]
             gbm_prediction = gbm_prices[-1]
             blended_prediction = blended_predictions[-1]
 
             return render(request, 'prediction/stock_prediction.html', {
-                'graphic': graphic,
+                'plot_div': plot_div,
                 'lstm_prediction': f'{lstm_prediction:.2f}',
                 'gbm_prediction': f'{gbm_prediction:.2f}',
                 'blended_prediction': f'{blended_prediction:.2f}',

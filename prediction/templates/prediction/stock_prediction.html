@@ -4,133 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Price Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #020a0e;
+            color: #d4d4d4;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
+            padding: 2rem;
+            font-family: Poppins;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #1c2833;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #b5f4c9;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        form label {
+            display: block;
+            text-align: left;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        form input, form select {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid #b5f4c9;
+            border-radius: 4px;
+            background-color: #121b22;
+            color: #d4d4d4;
+        }
+
+        form button {
+            font-size: 1rem;
+            padding: 10px;
+            background-color: #1db954;
+            color: #020a0e;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            height: 40px;
+            width: 100%;
+        }
+
+        form button:hover {
+            background-color: #17a44a;
+        }
+
+        .plotly-container {
+            width: 80%;
+            margin: 2rem auto;
+            background: #1c2833;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .accuracy {
+            margin-top: 2rem;
+            text-align: left;
+            background: #1c2833;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .accuracy p {
+            font-size: 1rem;
+            color: #d4d4d4;
+            margin-bottom: 0.5rem;
         }
 
         nav {
-            background-color: #2c3e50;
-            padding: 10px 20px;
+            background-color: #020a0e;
+            color: white;
+            padding: 0px 10px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease;
         }
 
-        .nav-container {
+        nav .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            color: #ecf0f1;
-            font-size: 24px;
-            margin: 0;
+            color: #fff;
+            font-size: 1.5rem;
         }
 
-        ul {
+        nav ul {
             list-style: none;
             display: flex;
+            gap: 1.5rem;
             margin: 0;
             padding: 0;
         }
 
-        ul li {
-            margin-left: 20px;
+        nav ul li {
+            margin: 0;
+            padding: 0;
         }
 
-        ul li a {
-            color: #ecf0f1;
+        nav ul li a {
+            color: #d4d4d4;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 1rem;
+            padding: 0.75rem 1rem;
+            display: block;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        ul li a:hover {
-            text-decoration: underline;
-        }
-
-        .container {
-            max-width: 90%;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 32px;
-            color: #2c3e50;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            align-items: center;
-        }
-
-        form button {
-            padding: 10px;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 200px;
-        }
-
-        form button:hover {
-            background-color: #34495e;
-        }
-
-        .accuracy {
-            margin-top: 20px;
-            text-align: left;
-        }
-
-        .accuracy p {
-            font-size: 16px;
-            color: #2c3e50;
-        }
-        .graph-container {
-            width: 70%; /* Adjust the width as needed */
-            margin: 20px auto; /* Center the graph */
-        }
-        .graph-container img {
-            width: 100%; /* Make the image responsive within the container */
-            height: auto;
-        }
-
-        @media (max-width: 600px) {
-            .nav-container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            ul li {
-                margin-left: 0;
-            }
-
-            .container {
-                padding: 10px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            form button {
-                font-size: 14px;
-            }
+        nav ul li a:hover {
+            color: #020a0e;
         }
     </style>
 </head>
@@ -145,37 +163,37 @@
             </ul>
         </div>
     </nav>
+    <br><br>
 
     <div class="container">
         <h1>Stock Price Prediction</h1>
         <form method="POST">
             {% csrf_token %}
-
             <label for="ticker">Ticker:</label>
-            <input type="text" name="ticker" id="ticker" ><br><br>
-
-            <label for="start_date">Start Date:</label>
-            <input type="date" name="start_date" id="start_date" value="2015-01-01"><br><br>
-
-            <label for="end_date">End Date:</label>
-            <input type="date" name="end_date" id="end_date" value="2025-01-01"><br><br>
-
+            <input type="text" name="ticker" id="ticker">
+            <label for="prediction_months">Prediction Months:</label>
+            <select name="prediction_months" id="prediction_months">
+                <option value="1">1 Month</option>
+                <option value="3">3 Months</option>
+                <option value="6">6 Months</option>
+                <option value="12">1 Year</option>
+            </select>
             <button type="submit">Predict</button>
         </form>
 
-        {% if graphic %}
+        {% if plot_div %}
             <h2>Prediction for {{ stock_ticker }}</h2>
-            <div class="graph-container">
-                <img src="data:image/png;base64,{{ graphic }}">
+            <div class="plotly-container">
+                {{ plot_div|safe }}
             </div>
             <div class="accuracy">
                 <p>LSTM Prediction: {{ lstm_prediction }}</p>
                 <p>GBM Prediction: {{ gbm_prediction }}</p>
                 <p>Blended Prediction: {{ blended_prediction }}</p>
-                <p>MSE LSTM: {{ mse_lstm }}</p>
-                <p>MSE GBM: {{ mse_gbm }}</p>
-                <p>MSE Blended: {{ mse_blended }}</p>
             </div>
+        {% endif %}
+        {% if error_message %}
+            <p style="color: red;">{{ error_message }}</p>
         {% endif %}
     </div>
 </body>
