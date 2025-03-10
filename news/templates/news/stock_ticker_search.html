@@ -2,27 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">' <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Search Stock News</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background:  #020a0e;
+            color: #d4d4d4;
             margin: 0;
-            padding: 2rem;
+            padding: 2rem; 
+            font-family: Poppins;
         }
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: white;
+            background-color: #1c2833;
             padding: 2rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             border-radius: 8px;
         }
         h1 {
             font-size: 2rem;
             margin-bottom: 1rem;
-            color: #333;
+            color: #b5f4c9;
             text-align: center;
         }
         form {
@@ -33,54 +35,56 @@
         input {
             padding: 0.75rem;
             font-size: 1rem;
-            border: 1px solid #ccc;
+            border: 1px solid #b5f4c9;
             border-radius: 4px;
             margin-right: 1rem;
+            background-color: #121b22;
+            color: #d4d4d4;
         }
         button {
             font-size: 1rem;
             position: relative;
-            top:19px;
-            padding: 10px ;
-            background-color: #2c3e50;
-            color: white;
+            top: 19px;
+            padding: 10px;
+            background-color: #1db954;
+            color: #020a0e;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s ease;
             height: 40px;
-            
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #17a44a;
         }
         ul {
             list-style: none;
             padding: 0;
         }
         .news-list {
-            background-color: #fff;
-            border: 1px solid #ccc;
+            background-color: #121b22;
+            border: 1px solid #b5f4c9;
             border-radius: 8px;
             padding: 1rem;
             margin-bottom: 1rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         .news-list a {
             font-size: 1.2rem;
-            color: #007bff;
+            color: #1db954;
             text-decoration: none;
             font-weight: bold;
         }
-        li a:hover {
+        .news-list a:hover {
+            color: #b5f4c9;
             text-decoration: underline;
         }
-        li p {
+        .news-list p {
             margin-top: 0.5rem;
-            color: #555;
+            color: #d4d4d4;
         }
         nav {
-            background-color: #2c3e50;
+            background-color:#020a0e;;
             color: white;
             padding: 0px 10px;
             position: fixed;
@@ -88,7 +92,7 @@
             top: 0;
             left: 0;
             z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease;
         }
         nav .nav-container {
@@ -114,15 +118,17 @@
             padding: 0;
         }
         nav ul li a {
-            color: #fff;
+            color: #d4d4d4;
             text-decoration: none;
             font-size: 1rem;
             padding: 0.75rem 1rem;
             display: block;
             border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         nav ul li a:hover {
-            background-color: #575757;
+            
+            color: #020a0e;
         }
     </style>
 </head>
@@ -134,10 +140,12 @@
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'stock_prediction' %}">Predictor</a></li>
                 <li><a href="{% url 'stock_news' %}">News</a></li>
-               
             </ul>
         </div>
     </nav>
+    <br>
+    <br>
+
     <div class="container">
         <h1>Search for Stock News</h1>
         <form method="POST">
@@ -146,7 +154,6 @@
             <button type="submit">Get News</button>
         </form>
 
-        
         {% if news_articles %}
             <h2>News for {{ stock_ticker }}</h2>
             <ul>

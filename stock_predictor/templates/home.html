@@ -5,24 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Predictor and News</title>
     
+    <!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
+        .terminologies-section {
+    background: #121b22;
+    color: #d4d4d4;
+    padding: 2rem;
+    text-align: center;
+    border-radius: 10px;
+    margin: 2rem auto;
+    max-width: 900px;
+}
+
+.terminologies-section h2 {
+    color: #b5f4c9;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.terminologies-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.centered{
+    width: 60%;
+    margin: 2rem auto; /* Centers the table */
+    border-collapse: collapse;
+    text-align: left;
+   /* Dark theme background */
+    color: #ffffff;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.term {
+    background: #1c2833;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.term h3 {
+    color: #1db954;
+    font-size: 1.5rem;
+}
+
+.term p {
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    font-weight: 300;
+}
         
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f7f8fc;
-            color: #333;
+            background-color: #020a0e;
+            color: #d4d4d4;
         }
         
         /* Navigation Bar */
         nav {
-            background-color: #2c3e50;
-            color: #fff;
+            background-color: #020a0e;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            color: #d4d4d4;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        nav ul li a:hover {
+            color: #b5f4c9;
+        }
+
+        /* Mutual Funds Section */
+        .mutual-funds {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .mutual-funds h2 {
+            color: #b5f4c9;
+            margin-bottom: 1rem;
+        }
+
+        .mutual-funds p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        .fund-table {
+            border:white;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: #1c2833;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .fund-table th, .fund-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+
+        .fund-table th {
+            background-color: #1db954;
+            color: #020a0e;
+        }
+
+        .fund-table tr:hover {
+            background-color: #2a3b47;
+        }
+        body {
+            background-color: #020a0e;
+            color: #d4d4d4;
+        }
+        
+        /* Navigation Bar */
+        nav {
+            background-color: #020a0e;
             padding: 1rem;
         }
         
@@ -39,20 +161,19 @@
         }
         
         nav ul li a {
-            color: #fff;
+            color: #d4d4d4;
             text-decoration: none;
             font-size: 1rem;
+            font-weight: 500;
         }
         
         nav ul li a:hover {
-            text-decoration: underline;
-            background-color: #575757;
+            color: #b5f4c9;
         }
 
-        
         /* Hero Section */
         .hero-section {
-           
+            background: linear-gradient(135deg, #020a0e, #363e36);
             background-size: cover;
             background-position: center;
             height: 80vh;
@@ -60,48 +181,248 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            color: #333;
+            color: #fff;
         }
         
         .hero-content h1 {
             font-size: 3rem;
+            font-weight: 600;
             margin-bottom: 1rem;
         }
         
         .hero-content p {
             font-size: 1.25rem;
             margin-bottom: 2rem;
+            font-weight: 300;
         }
         
         .cta-button {
-            background-color: #ff9800;
-            color: #fff;
+            background-color: #1db954;
+            color: #020a0e;
             padding: 1rem 2rem;
             border: none;
             font-size: 1rem;
             cursor: pointer;
             text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s ease-in-out;
         }
         
         .cta-button:hover {
-            background-color: #e68900;
+            background-color: #17a44a;
+            color: #ffffff;
         }
-        
+        /* SIP Calculator Section */
+/* SIP Calculator Section */
+/* SIP Calculator Section */
+.sip-calculator {
+    background: #121b22;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #d4d4d4;
+}
 
-        
+.sip-calculator h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #b5f4c9;
+}
 
+/* SIP & Lumpsum Selection */
+.sip-options {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
 
-        
+.sip-options label {
+    padding: 0.5rem 1rem;
+    background: #1db954;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+    color: #020a0e;
+}
+
+.sip-options input[type="radio"] {
+    display: none;
+}
+
+.sip-options label:hover {
+    background: #17a44a;
+    color: #fff;
+}
+
+/* Input Fields */
+.sip-calculator label {
+    display: block;
+    margin: 0.75rem 0 0.25rem;
+    font-weight: 500;
+}
+
+.sip-calculator input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #1c2833;
+    color: #d4d4d4;
+}
+
+.sip-calculator input::placeholder {
+    color: #bbb;
+}
+
+/* Asset Allocation - Grid Layout */
+.asset-allocation {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Number of Years Selection */
+.years-selection {
+    margin-top: 1rem;
+}
+
+.years-selection label {
+    font-weight: 500;
+}
+
+.years-selection input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #444;
+    border-radius: 5px;
+    background: #1c2833;
+    color: #d4d4d4;
+}
+
+/* Ensure Minimum 3 Years */
+.years-selection input[type="number"] {
+    -moz-appearance: textfield; /* Hide number input arrows in Firefox */
+}
+
+.years-selection input::-webkit-outer-spin-button,
+.years-selection input::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Hide number input arrows in Chrome, Safari */
+    margin: 0;
+}
+
+/* Submit Button */
+.sip-calculator button {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1db954;
+            color: #020a0e;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: 0.3s;
+    margin-top: 1rem;
+}
+
+.sip-calculator button:hover {
+    color:white;
+}
+
+/* Result Section */
+#sip-result {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #1c2833;
+    border-radius: 8px;
+    color: #b5f4c9;
+    font-weight: 600;
+}
+
         /* Footer */
         footer {
             text-align: center;
             padding: 1.5rem 0;
-            background-color: #333;
-            color: #fff;
+            background-color: #020a0e;
+            color: #d4d4d4;
             margin-top: 2rem;
         }
+        /* GBM + LSTM Section */
+.gbm-lstm-section {
+    background: linear-gradient(135deg, #1c2833, #020a0e);
+    color: #d4d4d4;
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
 
-        </style>
+.gbm-lstm-section .container {
+    max-width: 800px;
+    margin: auto;
+}
+
+.gbm-lstm-section h2 {
+    font-size: 2rem;
+    color: #b5f4c9;
+    margin-bottom: 1.5rem;
+}
+
+.gbm-lstm-section p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.gbm-lstm-box {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.gbm-lstm-box h3 {
+    color: #1db954;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.gbm-lstm-box ul {
+    list-style: none;
+    padding: 0;
+}
+
+.gbm-lstm-box ul li {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.gbm-lstm-box ul li::before {
+    content: "✔";
+    color: #1db954;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.highlight {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1db954;
+    margin-top: 1.5rem;
+}
+
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -112,7 +433,6 @@
                 <li><a href="{% url 'home' %}">Home</a></li>
                 <li><a href="{% url 'stock_prediction' %}">Predictor</a></li>
                 <li><a href="{% url 'stock_news' %}">News</a></li>
-                
             </ul>
         </div>
     </nav>
@@ -125,14 +445,138 @@
             <a href="{% url 'stock_prediction' %}" class="cta-button">Try the Stock Predictor</a>
         </div>
     </section>
+<!-- SIP Calculator Section -->
+<!-- SIP Calculator Section -->
+<!-- SIP Calculator Section -->
+<section class="sip-calculator">
+    <h2>SIP & Lumpsum Calculator</h2>
+    
+    <label for="sipAmount">Monthly SIP Amount (₹)</label>
+    <input type="number" id="sipAmount" placeholder="Enter amount" required>
+
+    <label for="rate">Expected Annual Return Rate (%)</label>
+    <input type="number" id="rate" placeholder="Enter rate" required>
+
+    <label for="years">Investment Duration (Years)</label>
+    <input type="number" id="years" min="3" placeholder="Enter number of years" required>
+    
+    <button onclick="calculateSIP()">Calculate</button>
+    <div id="sip-result"></div>
+</section>
+
+<!-- Mutual Funds Table -->
+<section class="mutual-funds" id="mutual-funds">
+    
+      <h1> Mutual Funds Returns</h1>
+    <table   class="centered" border="1" cellpadding="20" style="width:60%; text-align: left;">
+        <tr>
+            <th>Investment Type</th>
+            <th>Expected Annual Return (%)</th>
+        </tr>
+        <tr>
+            <td>Gold</td>
+            <td>7-10%</td>
+        </tr>
+        <tr>
+            <td>Silver</td>
+            <td>8-12%</td>
+        </tr>
+        <tr>
+            <td>Mid Cap Mutual Funds</td>
+            <td>12-18%</td>
+        </tr>
+        <tr>
+            <td>Large Cap Mutual Funds</td>
+            <td>10-15%</td>
+        </tr>
+        <tr>
+            <td>Small Cap Mutual Funds</td>
+            <td>15-22%</td>
+        </tr>
+        <tr>
+            <td>Flexi Cap Mutual Funds</td>
+            <td>10-18%</td>
+        </tr>
+        <tr>
+            <td>Government Debt Bonds</td>
+            <td>6-8%</td>
+        </tr>
+        <tr>
+            <td>Fixed Deposits (FD)</td>
+            <td>5-7%</td>
+        </tr>
+    </table>
+</section>
+<!-- Stock Market Terminologies Section -->
+<section class="terminologies-section">
+    <h2>Stock Market Terminologies</h2>
+    <p>Understanding stock market terminology is crucial for making informed investment decisions. Here are some essential terms:</p>
+    <div class="terminologies-container">
+        <div class="term">
+            <h3>Bull Market</h3>
+            <p>A market condition where prices are rising or expected to rise, indicating investor confidence.</p>
+        </div>
+        <div class="term">
+            <h3>Bear Market</h3>
+            <p>A market condition where prices are falling or expected to fall, indicating investor pessimism.</p>
+        </div>
+        <div class="term">
+            <h3>Market Capitalization</h3>
+            <p>The total value of a company's shares in the market, calculated as stock price multiplied by total shares.</p>
+        </div>
+        <div class="term">
+            <h3>P/E Ratio (Price to Earnings Ratio)</h3>
+            <p>A valuation metric that shows the relationship between a company's stock price and its earnings per share.</p>
+        </div>
+        <div class="term">
+            <h3>Dividend</h3>
+            <p>A portion of a company's profits distributed to shareholders as a reward for holding shares.</p>
+        </div>
+        <div class="term">
+            <h3>Liquidity</h3>
+            <p>The ease with which an asset or security can be converted into cash without affecting its market price.</p>
+        </div>
+    </div>
+</section>
+<!-- GBM + LSTM Section -->
+<section id="gbm-lstm" class="gbm-lstm-section">
+    <div class="container">
+        <h2>📈 Why Integrate GBM with LSTM for Stock Prediction?</h2>
+        <p><strong>1️⃣ Geometric Brownian Motion (GBM):</strong>  
+        GBM is a stochastic process used to simulate stock prices based on randomness and historical trends. However, it assumes market efficiency and lacks deep pattern recognition.</p>
+
+        <p><strong>2️⃣ Long Short-Term Memory (LSTM):</strong>  
+        LSTMs are powerful neural networks that capture long-term dependencies in sequential data, making them ideal for recognizing stock market patterns.</p>
+
+        <div class="gbm-lstm-box">
+            <h3>🔥 Synergy of GBM & LSTM:</h3>
+            <ul>
+                <li><strong>GBM provides a probabilistic baseline</strong> for stock movements based on volatility.</li>
+                <li><strong>LSTM fine-tunes predictions</strong> by learning complex, non-linear market trends.</li>
+                <li><strong>Combining both enhances accuracy,</strong> reducing reliance on single-method forecasting.</li>
+            </ul>
+        </div>
+
+        <p><strong>📊 Practical Example:</strong></p>
+        <p>GBM predicts potential price movement ranges, while LSTM refines predictions using time-series patterns, sentiment, and momentum.</p>
+
+        <p class="highlight">🚀 This hybrid approach is widely used in AI-driven trading and quantitative finance!</p>
+    </div>
+</section>
 
 
+<script>
+    function calculateSIP() {
+        let sipAmount = parseFloat(document.getElementById("sipAmount").value);
+        let rate = parseFloat(document.getElementById("rate").value) / 100 / 12;
+        let years = parseInt(document.getElementById("years").value);
+        let months = years * 12;
+        
+        let futureValue = sipAmount * ((Math.pow(1 + rate, months) - 1) / rate) * (1 + rate);
+        
+        document.getElementById("sip-result").innerHTML = `Future Value: ₹${futureValue.toFixed(2)}`;
+    }
+</script>
 
-      
-
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 TrendTrader. All rights reserved.</p>
-    </footer>
 </body>
 </html>
