@@ -113,7 +113,7 @@ def stock_prediction_view(request):
         t, gbm_future = geometric_brownian_motion(S0, mu, sigma, T, future_days)
         
         # Blend future predictions
-        blended_future = 0.9 * future_predictions.flatten() + 0.1 * gbm_future[-len(future_predictions):]
+        blended_future = 0.7 * future_predictions.flatten() + 0.3 * gbm_future[-len(future_predictions):]
         
         # Current predictions (test data)
         actual_dates = data.index[-len(y_test):]
@@ -141,7 +141,9 @@ def stock_prediction_view(request):
             yaxis_title='Stock Price (USD)',
             hovermode='x unified',
             plot_bgcolor='#020a0e',  
-            paper_bgcolor='#020a0e',  
+            paper_bgcolor='#020a0e',
+            width=1000,  # Increase the width
+            height=500,  # Adjust height to maintain proportion
             font=dict(
                 color='white'  
             ),
