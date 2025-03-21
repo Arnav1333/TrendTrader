@@ -128,11 +128,11 @@ def stock_prediction_view(request):
                                  name='Predictions'))
         
         # Add a vertical line to distinguish between historical and future data
-        fig.add_vline(x=data.index[-1], line_width=1, line_dash="dash", line_color="gray")
+        fig.add_vline(x=data.index[-1], line_width=1, line_dash="dash", line_color=" palegoldenrod")
         
         # Plot only the blended future prediction
         fig.add_trace(go.Scatter(x=future_dates, y=blended_future, mode='lines', 
-                                line=dict(dash='dash', color='red'), name='Forecasted Prices'))
+                                line=dict(color='Gold'), name='Forecasted Prices'))
         
         
         fig.update_layout(
