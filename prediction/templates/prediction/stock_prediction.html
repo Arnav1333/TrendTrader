@@ -187,9 +187,8 @@
                 {{ plot_div|safe }}
             </div>
             <div class="accuracy">
-                <p>LSTM Prediction: {{ lstm_prediction }}</p>
-                <p>GBM Prediction: {{ gbm_prediction }}</p>
-                <p>Blended Prediction: {{ blended_prediction }}</p>
+                
+                <p> Prediction: {{ blended_prediction }}</p>
             </div>
         {% endif %}
         {% if error_message %}
