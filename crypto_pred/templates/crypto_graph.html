@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crypto Forecast</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        input, button {
+            padding: 0.5rem;
+            margin: 0.5rem;
+            font-size: 1rem;
+        }
+
+        form {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>📈 Crypto Price Forecast</h1>
+
+    <form method="get" action="{% url 'crypto_forecast' %}">
+        <label for="ticker">Crypto Ticker (e.g. BTC-USD):</label>
+        <input type="text" id="ticker" name="ticker" value="{{ ticker|default:'BTC-USD' }}" required>
+
+        <label for="days">Days:</label>
+        <input type="number" id="days" name="days" min="1" max="60" value="{{ days|default:30 }}" required>
+
+        <button type="submit">Show Forecast</button>
+    </form>
+
+    {% if error %}
+        <p style="color: red;">⚠️ {{ error }}</p>
+    {% endif %}
+
+    {% if graph_html %}
+        {{ graph_html|safe }}
+    {% endif %}
+</body>
+</html>

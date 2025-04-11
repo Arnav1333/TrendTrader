@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('prediction.urls')),
     path('',include('news.urls')),
-    path('',views.home,name='home')
+    path('',views.home,name='home'),
+    path('', include('crypto_pred.urls')),
 ]

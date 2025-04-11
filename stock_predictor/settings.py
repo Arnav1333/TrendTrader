@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'prediction',
     'news',
+    'crypto_pred',
 ]
 
 MIDDLEWARE = [
