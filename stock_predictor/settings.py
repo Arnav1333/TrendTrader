@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-eu1b%o*-=(p5(v7b*7u8)x0zizf#u+*gs58!2!bpui0&*e5n0c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
+ALLOWED_HOSTS = ['trendtrader-3d85.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
