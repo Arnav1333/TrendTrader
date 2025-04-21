@@ -1,0 +1,1 @@
+web: gunicorn stock_predictor.wsgi --log-file -
